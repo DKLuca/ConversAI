@@ -1,0 +1,259 @@
+:root {
+  /* Bordeaux al posto del blu di default di Bootstrap.
+     Alcuni colori di BS sono derivati dal blu classico
+     Ridefiniti i principali */
+  --bs-primary: #8c1f3f;
+  --bs-primary-rgb: 140, 31, 63;
+  --bs-link-color: #c9506f;
+  --bs-link-hover-color: #dd7089;
+
+  --colore-assistente-testo: #e8e8ec;
+}
+
+body {
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.btn-primary {
+  --bs-btn-bg: #8c1f3f;
+  --bs-btn-border-color: #8c1f3f;
+  --bs-btn-hover-bg: #75182f;
+  --bs-btn-hover-border-color: #75182f;
+  --bs-btn-active-bg: #5f1226;
+  --bs-btn-active-border-color: #5f1226;
+  --bs-btn-focus-shadow-rgb: 140, 31, 63;
+}
+
+/* ---------- PULSANTE MENU MOBILE ---------- */
+.btn-menu-mobile {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 1045; /* sopra il backdrop dell'offcanvas */
+  width: 44px;
+  height: 44px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* L'header dell'area principale parte dietro al pulsante hamburger fisso in
+   alto a sinistra: gli diamo spazio a sinistra sotto "lg", dove il pulsante
+   è visibile. Da "lg" in su il pulsante sparisce (d-lg-none) quindi il
+   padding torna normale. */
+.main-header {
+  padding: 1rem 1.5rem 1rem 4.25rem;
+}
+
+@media (min-width: 992px) {
+  .main-header {
+    padding-left: 1.75rem;
+  }
+}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar {
+  width: 300px;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #8c1f3f, #5f1226);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.lista-progetti .accordion-item {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.lista-progetti .accordion-header {
+  display: flex;
+  align-items: stretch;
+}
+
+.lista-progetti .accordion-button {
+  background: transparent;
+  color: #e7e7ec;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.65rem 0.75rem;
+  width: auto;
+  flex: 1 1 auto;
+  min-width: 0; /* permette al nome del progetto di troncarsi invece di spingere via le icone */
+}
+
+.lista-progetti .accordion-button:not(.collapsed) {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  box-shadow: inset 3px 0 0 var(--bs-primary);
+}
+
+.lista-progetti .accordion-button::after {
+  filter: invert(1) grayscale(1) brightness(1.6); /* la freccina di default è scura, resa più chiara */
+}
+
+.lista-progetti .accordion-button:focus {
+  box-shadow: 0 0 0 2px var(--bs-primary);
+}
+
+.progetto-azioni {
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.accordion-header:hover .progetto-azioni,
+.accordion-button:not(.collapsed) ~ .progetto-azioni {
+  opacity: 1;
+}
+
+.progetto-azioni .btn {
+  color: #c9cad4;
+}
+
+.progetto-azioni .btn:hover {
+  color: white;
+}
+
+.btn-nuova-conversazione {
+  border-style: dashed;
+  color: #b7b8c4;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-nuova-conversazione:hover {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.lista-conversazioni-vuota,
+.lista-progetti-vuota {
+  font-size: 0.8rem;
+  color: #8c8d9a;
+  padding: 0.3rem 0.2rem;
+}
+
+.voce-lista {
+  color: #b7b8c4;
+  border-radius: 8px;
+  padding: 0.4rem 0.55rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.voce-lista:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.voce-lista.selezionato {
+  background: var(--bs-primary);
+  color: white;
+}
+
+.voce-testo {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.voce-azioni {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.voce-lista:hover .voce-azioni {
+  opacity: 1;
+}
+
+.voce-azioni .btn {
+  color: #c9cad4;
+}
+
+.voce-azioni .btn:hover {
+  color: white;
+}
+
+.stato-vuoto {
+  margin: auto;
+  text-align: center;
+  color: #8c8d9a;
+  max-width: 280px;
+}
+
+.stato-vuoto-icona {
+  font-size: 2.2rem;
+  margin-bottom: 0.6rem;
+}
+
+.gruppo-messaggio {
+  max-width: 85%;
+}
+
+.gruppo-messaggio.utente {
+  align-self: flex-end;
+}
+
+.gruppo-messaggio.assistente {
+  align-self: flex-start;
+}
+
+.messaggio {
+  padding: 0.2rem 0;
+  line-height: 1.45;
+  word-wrap: break-word;
+  font-size: 0.94rem;
+}
+
+.messaggio-autore {
+  font-size: 0.68rem;
+  font-weight: 600;
+  opacity: 0.65;
+  margin-bottom: 0.2rem;
+}
+
+.gruppo-messaggio.utente .messaggio {
+  text-align: right;
+}
+
+.gruppo-messaggio.utente .messaggio-autore {
+  color: var(--bs-primary);
+  opacity: 1;
+}
+
+.messaggio-assistente {
+  color: var(--colore-assistente-testo);
+}
+
+.form-messaggio textarea {
+  max-height: 9.5rem; /* oltre ~6-7 righe diventa scrollabile internamente */
+  overflow-y: auto;
+  resize: none;
+}
+
+.btn-invia {
+  width: 2.7rem;
+  height: 2.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  padding: 0;
+}
+
+@media (min-width: 992px) {
+  .gruppo-messaggio {
+    max-width: 60%;
+  }
+}

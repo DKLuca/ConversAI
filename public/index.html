@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConversAI</title>
+  <link rel="stylesheet" href="/vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="/vendor/inter/inter.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="d-flex vh-100 overflow-hidden">
+
+  <!-- invisibile finché non riceve il focus da tastiera.
+       vedere seminario di accessibilità, navigare la pagina con tab-->
+  <a class="visually-hidden-focusable" href="#contenuto-principale">Vai al contenuto principale</a>
+
+  <!-- Hamburger visibile solo sotto "lg": apre la sidebar come offcanvas.
+       Da "lg" in su la sidebar diventa statica grazie alla classe "offcanvas-lg"
+       di Bootstrap, e questo pulsante sparisce (d-lg-none). -->
+  <button class="btn btn-primary btn-menu-mobile d-lg-none" type="button"
+          data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas"
+          aria-controls="sidebarOffcanvas" aria-label="Apri il menu dei progetti">
+    <i class="bi bi-list" aria-hidden="true"></i>
+  </button>
+
+  <!-- SIDEBAR / OFFCANVAS: un solo elemento per mobile e desktop, 
+       "offcanvas-lg" (da "lg" in su Bootstrap lo rende statico, senza
+       backdrop né pulsante di chiusura). -->
+  <div class="offcanvas-lg offcanvas-start sidebar d-flex flex-column border-end p-0"
+       tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+      <h1 class="offcanvas-title h5 d-flex align-items-center gap-2 mb-0" id="sidebarOffcanvasLabel">
+        <span class="logo-mark" aria-hidden="true">C</span> ConversAI
+      </h1>
+      <button type="button" class="btn-close btn-close-white d-lg-none"
+              data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas" aria-label="Chiudi il menu"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column p-3 gap-3 overflow-auto">
+      <button type="button" class="btn btn-primary w-100" id="btn-nuovo-progetto">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i> Nuovo progetto
+      </button>
+      <p class="lista-progetti-vuota mb-0" id="lista-progetti-vuota" hidden>
+        Nessun progetto. Creane uno per iniziare.
+      </p>
+      <div class="accordion lista-progetti flex-grow-1 overflow-auto" id="accordion-progetti"></div>
+    </div>
+  </div>
+
+  <main id="contenuto-principale" class="d-flex flex-column flex-grow-1 overflow-hidden">
+    <header class="main-header d-flex align-items-center justify-content-between border-bottom">
+      <h2 class="h5 mb-0 text-truncate" id="titolo-conversazione">Seleziona una conversazione</h2>
+      <div class="btn-group" id="azioni-conversazione" hidden>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-action="rinomina-conversazione" aria-label="Rinomina conversazione">
+          <i class="bi bi-pencil" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-action="elimina-conversazione" aria-label="Elimina conversazione">
+          <i class="bi bi-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- aria-live: chi usa uno screen reader viene avvisato quando arriva
+         un nuovo messaggio, senza dover ricontrollare la pagina a mano. -->
+    <div class="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-3" id="area-messaggi" aria-live="polite">
+      <div class="stato-vuoto" id="stato-vuoto">
+        <div class="stato-vuoto-icona"><i class="bi bi-chat-dots" aria-hidden="true"></i></div>
+        <p>Seleziona una conversazione dalla barra laterale, oppure creane una nuova, per iniziare a scrivere.</p>
+      </div>
+    </div>
+
+    <form class="form-messaggio border-top p-3 d-flex gap-2 align-items-end" id="form-messaggio" hidden>
+      <label class="visually-hidden" for="input-messaggio">Scrivi un messaggio</label>
+      <textarea class="form-control" id="input-messaggio" rows="1" required placeholder="Scrivi un messaggio..."></textarea>
+      <button class="btn btn-primary btn-invia" type="submit" aria-label="Invia messaggio">
+        <i class="bi bi-send" aria-hidden="true"></i>
+      </button>
+    </form>
+  </main>
+
+  <!-- Modale creazione/rinomina progetto -->
+  <div class="modal fade" id="modaleProgetto" tabindex="-1" aria-labelledby="modaleProgettoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="form-progetto" novalidate>
+        <div class="modal-header">
+          <h2 class="modal-title h5 mb-0" id="modaleProgettoLabel">Nuovo progetto</h2>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="input-progetto-nome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="input-progetto-nome" required maxlength="120">
+          </div>
+          <div class="mb-3">
+            <label for="input-progetto-descrizione" class="form-label">Descrizione (facoltativa)</label>
+            <textarea class="form-control" id="input-progetto-descrizione" rows="2" maxlength="500"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+          <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modale creazione/rinomina conversazione -->
+  <div class="modal fade" id="modaleConversazione" tabindex="-1" aria-labelledby="modaleConversazioneLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content" id="form-conversazione" novalidate>
+        <div class="modal-header">
+          <h2 class="modal-title h5 mb-0" id="modaleConversazioneLabel">Nuova conversazione</h2>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+        </div>
+        <div class="modal-body">
+          <label for="input-conversazione-topic" class="form-label">Argomento</label>
+          <input type="text" class="form-control" id="input-conversazione-topic" required maxlength="120">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annulla</button>
+          <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast per gli errori delle chiamate API: non blocca l'interfaccia
+       come farebbe un alert(), e sparisce da solo dopo qualche secondo. -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="toast-errore" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toast-errore-testo"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Chiudi"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+  <script src="/app.js" defer></script>
+</body>
+</html>
